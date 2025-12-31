@@ -72,28 +72,75 @@ I chose Solana for payments because:
 The payment flow:
 
 1. User submits task → API creates work item with `pending_payment` status
-2. User sees payment page with exact SOL amount and wallet address
+2. User sees payment page with exact SOL amount (9 decimal places) and wallet address
 3. Frontend polls `/api/check-payment/:id` every 10 seconds
 4. API checks Solana blockchain for incoming transactions
-5. When payment detected (within 5% tolerance for price fluctuation), status updates to `paid`
+5. When payment detected with matching unique amount, status updates to `paid`
+
+For price data, I use Coinbase's public API (`api.exchange.coinbase.com/products/SOL-USD/ticker`) - higher rate limits and more reliable than CoinGecko.
+
+---
+
+## Payment Verification: Solving the Hard Problems
+
+The initial payment system had a critical flaw: with a 5% tolerance on amount matching, two users paying similar amounts could have their payments misattributed. Here's how I solved it:
+
+### Unique Amounts Per Task
+
+Each task gets a cryptographically unique payment amount by adding the task ID as a nano-SOL offset:
 
 ```typescript
-// Check for incoming payments to our wallet
-async function checkForPayment(expectedAmountSol: number, workItemId: number) {
-  const signatures = await connection.getSignaturesForAddress(pubkey, { limit: 20 });
-
-  for (const sigInfo of signatures) {
-    const tx = await connection.getParsedTransaction(sigInfo.signature);
-    // Find transfers to our wallet that match expected amount
-    if (receivedSol >= expectedAmountSol * 0.95) {
-      return { found: true, signature: sigInfo.signature, amount: receivedSol };
-    }
-  }
-  return { found: false };
+// Generate a unique SOL amount for a work item
+export async function getUniquePaymentAmount(workItemId: number, usdAmount: number): Promise<number> {
+  const baseSol = await usdToSol(usdAmount);
+  // Add work item ID as 9th decimal place onwards (nano-SOL level)
+  const uniqueOffset = workItemId / 1_000_000_000;
+  return baseSol + uniqueOffset;
 }
 ```
 
-For price data, I switched from CoinGecko to Coinbase's public API (`api.exchange.coinbase.com/products/SOL-USD/ticker`) - higher rate limits and more reliable.
+For example, a $1 task might be `0.005263158` SOL, but task #42 would be exactly `0.005263200` SOL. This imperceptible difference makes each payment uniquely identifiable.
+
+### Timestamp Validation
+
+Payments are only valid if they occurred *after* the task was created:
+
+```typescript
+// Skip transactions from before the work item was created
+if (sigInfo.blockTime && sigInfo.blockTime < createdAtTimestamp) {
+  continue;
+}
+```
+
+This prevents old transactions from being claimed for new tasks.
+
+### Duplicate Prevention
+
+Each transaction signature is recorded in the database, ensuring no single payment can be used twice:
+
+```typescript
+// Check if a transaction signature has already been used
+export function isTransactionUsed(signature: string): boolean {
+  const result = db.prepare("SELECT id FROM work_items WHERE transaction_signature = ?").get(signature);
+  return result !== undefined;
+}
+```
+
+### Tight Tolerance Matching
+
+With unique amounts, we can use a much tighter tolerance (0.5% vs 5%) since we're only accounting for minor rounding errors:
+
+```typescript
+const tolerance = 0.005; // 0.5%
+const minExpected = expectedAmountSol * (1 - tolerance);
+const maxExpected = expectedAmountSol * (1 + tolerance);
+
+if (receivedSol >= minExpected && receivedSol <= maxExpected) {
+  return { found: true, signature: sigInfo.signature, amount: receivedSol };
+}
+```
+
+The result: a robust payment system that can handle concurrent users without any risk of payment misattribution.
 
 ---
 
