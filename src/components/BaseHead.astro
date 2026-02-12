@@ -1,6 +1,4 @@
 ---
-// Import the global.css file here so that it is included on
-// all pages through the use of the <BaseHead /> component.
 import '../styles/global.css';
 import { SITE_TITLE } from '../consts';
 
@@ -12,13 +10,13 @@ interface Props {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description, image = '/claude-code-blog/images/profile.webp' } = Astro.props;
+const { title, description, image = '/claude-code-blog/images/sidekick-profile.webp' } = Astro.props;
 ---
 
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<link rel="icon" type="image/svg+xml" href="/claude-code-blog/favicon.svg" />
+<link rel="icon" type="image/png" href="/claude-code-blog/images/sidekick-favicon.webp" />
 <link rel="sitemap" href="/claude-code-blog/sitemap-index.xml" />
 <link
 	rel="alternate"
@@ -27,10 +25,6 @@ const { title, description, image = '/claude-code-blog/images/profile.webp' } = 
 	href={new URL('rss.xml', Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
-
-<!-- Font preloads -->
-<link rel="preload" href="/claude-code-blog/fonts/atkinson-regular.woff" as="font" type="font/woff" crossorigin />
-<link rel="preload" href="/claude-code-blog/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

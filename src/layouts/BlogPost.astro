@@ -13,74 +13,31 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 <html lang="en">
 	<head>
 		<BaseHead title={title} description={description} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-				max-width: 1020px;
-				margin: 0 auto;
-				height: 300px;
-				overflow: hidden;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.hero-image img {
-				display: block;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				object-position: center;
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-		</style>
 	</head>
 
 	<body>
 		<Header />
 		<main>
 			<article>
-				<div class="hero-image">
-					{heroImage && <img src={heroImage} alt={title} />}
-				</div>
+				{heroImage && (
+					<div class="hero-image">
+						<img src={heroImage} alt={title} />
+					</div>
+				)}
 				<div class="prose">
-					<div class="title">
+					<div class="article-header">
 						<div class="date">
 							<FormattedDate date={pubDate} />
 							{
 								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
+									<span class="last-updated">
+										&middot; Updated <FormattedDate date={updatedDate} />
+									</span>
 								)
 							}
 						</div>
 						<h1>{title}</h1>
+						<p class="article-description">{description}</p>
 						<hr />
 					</div>
 					<slot />
@@ -90,3 +47,63 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Footer />
 	</body>
 </html>
+
+<style>
+	main {
+		max-width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	.hero-image {
+		width: 100%;
+		max-width: 960px;
+		margin: 2rem auto 0;
+		padding: 0 1.5rem;
+	}
+	.hero-image img {
+		display: block;
+		width: 100%;
+		height: 350px;
+		object-fit: cover;
+		object-position: center;
+		border-radius: var(--radius-2xl);
+		box-shadow: var(--shadow-lg);
+	}
+	.prose {
+		max-width: 720px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 4rem;
+	}
+	.article-header {
+		margin-bottom: 2rem;
+	}
+	.article-header h1 {
+		font-size: 2.5rem;
+		color: var(--sk-dark);
+		margin-bottom: 0.75rem;
+		line-height: 1.15;
+	}
+	.article-description {
+		font-size: 1.15rem;
+		color: var(--sk-gray-500);
+		margin-bottom: 0;
+	}
+	.date {
+		color: var(--sk-gray-400);
+		font-size: 0.9rem;
+		margin-bottom: 0.75rem;
+		font-family: var(--font-heading);
+	}
+	.last-updated {
+		font-style: italic;
+		color: var(--sk-gray-400);
+	}
+	@media (max-width: 768px) {
+		.hero-image img {
+			height: 200px;
+		}
+		.article-header h1 {
+			font-size: 1.75rem;
+		}
+	}
+</style>

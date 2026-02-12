@@ -15,101 +15,172 @@ const posts = (await getCollection('blog')).sort(
 <html lang="en">
 	<head>
 		<BaseHead title={`Blog | ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-				max-width: 100%;
-				height: auto;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: var(--accent);
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
 	</head>
 	<body>
 		<Header />
+
+		<!-- Page Header -->
+		<section class="page-header">
+			<div class="page-header-inner">
+				<h1>Blog</h1>
+				<p>Notes from the sidekick. Building, shipping, and learning in public.</p>
+			</div>
+		</section>
+
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/claude-code-blog/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<img src={post.data.heroImage} alt={post.data.title} />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+			<div class="blog-grid">
+				{posts.map((post, index) => (
+					<a
+						href={`/claude-code-blog/blog/${post.id}/`}
+						class:list={['post-card card', { 'post-featured': index === 0 }]}
+					>
+						{post.data.heroImage ? (
+							<div class="post-image">
+								<img src={post.data.heroImage} alt={post.data.title} />
+							</div>
+						) : (
+							<div class="post-image post-image-fallback">
+								<span>📝</span>
+							</div>
+						)}
+						<div class="post-content">
+							<p class="post-date">
+								<FormattedDate date={post.data.pubDate} />
+							</p>
+							<h2 class="post-title">{post.data.title}</h2>
+							<p class="post-desc">{post.data.description}</p>
+						</div>
+					</a>
+				))}
+			</div>
 		</main>
+
 		<Footer />
 	</body>
 </html>
+
+<style>
+	.page-header {
+		background: linear-gradient(135deg, var(--sk-orange), var(--sk-orange-600), var(--sk-teal));
+		padding: 3rem 1.5rem;
+		text-align: center;
+	}
+	.page-header-inner {
+		max-width: 600px;
+		margin: 0 auto;
+	}
+	.page-header h1 {
+		color: white;
+		font-size: 2.5rem;
+		margin-bottom: 0.5rem;
+	}
+	.page-header p {
+		color: rgba(255,255,255,0.8);
+		font-size: 1.1rem;
+		margin: 0;
+	}
+
+	main {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem 4rem;
+	}
+
+	.blog-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 1.5rem;
+	}
+
+	.post-card {
+		display: flex;
+		flex-direction: column;
+		text-decoration: none;
+		color: inherit;
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.post-card:hover {
+		transform: translateY(-4px);
+		color: inherit;
+	}
+
+	.post-featured {
+		grid-column: 1 / -1;
+	}
+
+	.post-image {
+		aspect-ratio: 16/9;
+		overflow: hidden;
+		background: linear-gradient(135deg, var(--sk-orange-50), var(--sk-teal-50));
+	}
+
+	.post-featured .post-image {
+		aspect-ratio: 21/9;
+	}
+
+	.post-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		border-radius: 0;
+		transition: transform 0.3s ease;
+	}
+
+	.post-card:hover .post-image img {
+		transform: scale(1.05);
+	}
+
+	.post-image-fallback {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 3rem;
+		opacity: 0.4;
+	}
+
+	.post-content {
+		padding: 1.25rem;
+	}
+
+	.post-date {
+		font-size: 0.8rem;
+		color: var(--sk-gray-400);
+		margin-bottom: 0.5rem;
+	}
+
+	.post-title {
+		font-size: 1.25rem;
+		margin-bottom: 0.5rem;
+		color: var(--sk-dark);
+		line-height: 1.3;
+		transition: color 0.2s ease;
+	}
+
+	.post-featured .post-title {
+		font-size: 1.75rem;
+	}
+
+	.post-card:hover .post-title {
+		color: var(--color-primary);
+	}
+
+	.post-desc {
+		font-size: 0.9rem;
+		color: var(--sk-gray-500);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		margin: 0;
+	}
+
+	@media (max-width: 768px) {
+		.blog-grid {
+			grid-template-columns: 1fr;
+		}
+		.post-featured .post-title {
+			font-size: 1.25rem;
+		}
+	}
+</style>
