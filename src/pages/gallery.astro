@@ -60,15 +60,19 @@ const prompts = [
 		<main>
 			<!-- Model Legend -->
 			<section class="models-legend">
-				<h2>Models</h2>
+				<div class="models-legend-header">
+					<h2>Models</h2>
+					<button type="button" id="clear-filters" class="clear-filters" hidden>Show All</button>
+				</div>
+				<p class="filter-hint">Click models to filter the gallery. Select multiple to compare.</p>
 				<div class="models-grid">
 					{models.map((model) => (
-						<div class="model-card card-gradient">
+						<button type="button" class="model-card card-gradient" data-model-id={model.id}>
 							<strong>{model.name}</strong>
 							<code>{model.id}</code>
 							<span class="model-desc">{model.desc}</span>
 							<span class="model-price">{model.price}/image</span>
-						</div>
+						</button>
 					))}
 				</div>
 			</section>
@@ -84,7 +88,7 @@ const prompts = [
 					</div>
 					<div class="gallery-grid">
 						{models.map((model, i) => (
-							<div class="gallery-item">
+							<div class="gallery-item" data-model-id={model.id}>
 								<button
 									type="button"
 									class="gallery-image-link"
@@ -185,9 +189,36 @@ const prompts = [
 	.models-legend {
 		margin-bottom: 3rem;
 	}
-	.models-legend h2 {
+	.models-legend-header {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-bottom: 0.5rem;
+	}
+	.models-legend-header h2 {
 		color: var(--color-primary);
-		margin-bottom: 1.5rem;
+		margin: 0;
+	}
+	.filter-hint {
+		font-size: 0.85rem;
+		color: var(--sk-gray-400);
+		margin: 0 0 1rem;
+	}
+	.clear-filters {
+		font-family: var(--font-heading);
+		font-size: 0.8rem;
+		font-weight: 600;
+		padding: 0.35rem 0.85rem;
+		border: 1.5px solid var(--sk-orange);
+		border-radius: var(--radius-lg);
+		background: none;
+		color: var(--sk-orange);
+		cursor: pointer;
+		transition: background 0.2s ease, color 0.2s ease;
+	}
+	.clear-filters:hover {
+		background: var(--sk-orange);
+		color: white;
 	}
 	.models-grid {
 		display: grid;
@@ -199,6 +230,20 @@ const prompts = [
 		flex-direction: column;
 		gap: 0.35rem;
 		padding: 1.25rem;
+		border: 2px solid transparent;
+		cursor: pointer;
+		transition: border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+		text-align: left;
+	}
+	.model-card:hover {
+		border-color: var(--sk-orange-300, #f0a070);
+	}
+	.model-card.selected {
+		border-color: var(--sk-orange);
+		box-shadow: 0 0 0 1px var(--sk-orange), var(--shadow-md);
+	}
+	.model-card.dimmed {
+		opacity: 0.45;
 	}
 	.model-card strong {
 		font-family: var(--font-heading);
@@ -219,6 +264,14 @@ const prompts = [
 		font-weight: 600;
 		color: var(--sk-teal-700);
 		font-family: var(--font-heading);
+	}
+
+	/* Filter transitions for gallery items */
+	.gallery-item {
+		transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+	}
+	.gallery-item.hidden-by-filter {
+		display: none;
 	}
 
 	/* Gallery Sections */
@@ -252,7 +305,6 @@ const prompts = [
 		overflow: hidden;
 		background: white;
 		box-shadow: var(--shadow-md);
-		transition: box-shadow 0.3s ease, transform 0.3s ease;
 	}
 	.gallery-item:hover {
 		box-shadow: var(--shadow-xl);
@@ -432,6 +484,54 @@ const prompts = [
 </style>
 
 <script>
+	// --- Model Filtering ---
+	const selectedModels = new Set<string>();
+	const modelCards = document.querySelectorAll<HTMLButtonElement>('.model-card[data-model-id]');
+	const galleryItems = document.querySelectorAll<HTMLElement>('.gallery-item[data-model-id]');
+	const clearBtn = document.getElementById('clear-filters') as HTMLButtonElement;
+
+	function applyFilters() {
+		const hasFilter = selectedModels.size > 0;
+
+		// Toggle clear button
+		clearBtn.hidden = !hasFilter;
+
+		// Update model cards
+		modelCards.forEach((card) => {
+			const id = card.dataset.modelId!;
+			if (hasFilter) {
+				card.classList.toggle('selected', selectedModels.has(id));
+				card.classList.toggle('dimmed', !selectedModels.has(id));
+			} else {
+				card.classList.remove('selected', 'dimmed');
+			}
+		});
+
+		// Show/hide gallery items
+		galleryItems.forEach((item) => {
+			const id = item.dataset.modelId!;
+			item.classList.toggle('hidden-by-filter', hasFilter && !selectedModels.has(id));
+		});
+	}
+
+	modelCards.forEach((card) => {
+		card.addEventListener('click', () => {
+			const id = card.dataset.modelId!;
+			if (selectedModels.has(id)) {
+				selectedModels.delete(id);
+			} else {
+				selectedModels.add(id);
+			}
+			applyFilters();
+		});
+	});
+
+	clearBtn.addEventListener('click', () => {
+		selectedModels.clear();
+		applyFilters();
+	});
+
+	// --- Lightbox ---
 	const lightbox = document.getElementById('lightbox')!;
 	const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
 	const lightboxModel = document.getElementById('lightbox-model')!;
@@ -441,10 +541,13 @@ const prompts = [
 	let currentIndex = 0;
 	let groupItems: HTMLButtonElement[] = [];
 
-	function getGroupItems(group: string): HTMLButtonElement[] {
+	function getVisibleGroupItems(group: string): HTMLButtonElement[] {
 		return Array.from(document.querySelectorAll<HTMLButtonElement>(
 			`[data-lightbox-group="${group}"]`
-		));
+		)).filter((btn) => {
+			const item = btn.closest('.gallery-item');
+			return !item?.classList.contains('hidden-by-filter');
+		});
 	}
 
 	function showImage(index: number) {
@@ -457,10 +560,11 @@ const prompts = [
 		lightboxCounter.textContent = `${index + 1} / ${groupItems.length}`;
 	}
 
-	function open(group: string, index: number) {
+	function open(group: string, btn: HTMLButtonElement) {
 		currentGroup = group;
-		groupItems = getGroupItems(group);
-		showImage(index);
+		groupItems = getVisibleGroupItems(group);
+		const index = groupItems.indexOf(btn);
+		showImage(index >= 0 ? index : 0);
 		lightbox.setAttribute('aria-hidden', 'false');
 		document.body.style.overflow = 'hidden';
 	}
@@ -481,7 +585,7 @@ const prompts = [
 	// Click handlers on gallery thumbnails
 	document.querySelectorAll<HTMLButtonElement>('[data-lightbox-group]').forEach((btn) => {
 		btn.addEventListener('click', () => {
-			open(btn.dataset.lightboxGroup!, parseInt(btn.dataset.lightboxIndex!, 10));
+			open(btn.dataset.lightboxGroup!, btn);
 		});
 	});
 
