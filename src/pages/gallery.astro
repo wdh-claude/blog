@@ -7,11 +7,15 @@ import { SITE_TITLE } from '../consts';
 const models = [
 	{ id: 'nano-banana-pro', name: 'Nano Banana Pro', desc: 'Google Gemini-powered. 32K char prompts, 1K–4K resolution, aspect ratio support.', price: '~$0.12' },
 	{ id: 'flux-2-pro', name: 'Flux 2 Pro', desc: 'Black Forest Labs. 3K char prompts, aspect ratio support.', price: '$0.04' },
+	{ id: 'flux-2-max', name: 'Flux 2 Max', desc: 'Higher quality Flux. 3K char prompts, up to 50 steps, aspect ratio support.', price: '$0.09' },
+	{ id: 'gpt-image-1-5', name: 'GPT Image 1.5', desc: 'OpenAI model. 32K char prompts, aspect ratio support.', price: '$0.23' },
+	{ id: 'imagineart-1.5-pro', name: 'ImagineArt 1.5 Pro', desc: 'ImagineArt. 10K char prompts, aspect ratio support.', price: '$0.05' },
 	{ id: 'venice-sd35', name: 'Venice SD35', desc: 'Stable Diffusion 3.5 Large. 1.5K char prompts, 16px divisor.', price: '$0.01' },
 	{ id: 'hidream', name: 'HiDream', desc: 'HiDream-I1-Dev. 1.5K char prompts, 8px divisor.', price: '$0.01' },
 	{ id: 'z-image-turbo', name: 'Z-Image Turbo', desc: 'Tongyi Z-Image. 7.5K char prompts, 8-step max. Default model & fastest.', price: '$0.01' },
 	{ id: 'qwen-image', name: 'Qwen Image', desc: 'Qwen Image gen. 1.5K char prompts, 8-step max. Highest quality trait.', price: '$0.01' },
 	{ id: 'chroma', name: 'Chroma', desc: 'Chroma1-HD by Lodestones. 7.5K char prompts, 10-step max.', price: '$0.01' },
+	{ id: 'wai-Illustrious', name: 'Anime (WAI)', desc: 'WAI Illustrious. 1.5K char prompts, anime art style, 16px divisor.', price: '$0.01' },
 	{ id: 'seedream-v4', name: 'Seedream V4.5', desc: 'Seedream V4.5. 10K char prompts, aspect ratio support.', price: '$0.05' },
 ];
 
@@ -79,19 +83,23 @@ const prompts = [
 						</p>
 					</div>
 					<div class="gallery-grid">
-						{models.map((model) => (
+						{models.map((model, i) => (
 							<div class="gallery-item">
-								<a
-									href={`/claude-code-blog/images/gallery/${promptItem.key}--${model.id}.webp`}
-									target="_blank"
+								<button
+									type="button"
 									class="gallery-image-link"
+									data-lightbox-group={promptItem.key}
+									data-lightbox-index={i}
+									data-lightbox-src={`/claude-code-blog/images/gallery/${promptItem.key}--${model.id}.webp`}
+									data-lightbox-alt={`${promptItem.title} by ${model.name}`}
+									data-lightbox-model={model.name}
 								>
 									<img
 										src={`/claude-code-blog/images/gallery/${promptItem.key}--${model.id}.webp`}
 										alt={`${promptItem.title} by ${model.name}`}
 										loading="lazy"
 									/>
-								</a>
+								</button>
 								<div class="gallery-label">
 									<span class="gallery-model-name">{model.name}</span>
 								</div>
@@ -128,6 +136,21 @@ const prompts = [
 		</main>
 
 		<Footer />
+
+		<!-- Lightbox -->
+		<div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
+			<div class="lightbox-backdrop"></div>
+			<button type="button" class="lightbox-close" aria-label="Close">&times;</button>
+			<button type="button" class="lightbox-prev" aria-label="Previous image">&#8249;</button>
+			<button type="button" class="lightbox-next" aria-label="Next image">&#8250;</button>
+			<div class="lightbox-content">
+				<img id="lightbox-img" src="" alt="" />
+				<div class="lightbox-caption">
+					<span id="lightbox-model"></span>
+					<span id="lightbox-counter"></span>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
 
@@ -240,6 +263,12 @@ const prompts = [
 		display: block;
 		aspect-ratio: 1;
 		overflow: hidden;
+		width: 100%;
+		border: none;
+		padding: 0;
+		margin: 0;
+		background: none;
+		cursor: pointer;
 	}
 	.gallery-image-link img {
 		width: 100%;
@@ -301,4 +330,172 @@ const prompts = [
 			grid-template-columns: 1fr;
 		}
 	}
+
+	/* Lightbox */
+	.lightbox {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.25s ease;
+	}
+	.lightbox[aria-hidden="false"] {
+		opacity: 1;
+		pointer-events: auto;
+	}
+	.lightbox-backdrop {
+		position: absolute;
+		inset: 0;
+		background: rgba(0, 0, 0, 0.85);
+	}
+	.lightbox-content {
+		position: relative;
+		max-width: 90vw;
+		max-height: 85vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+	.lightbox-content img {
+		max-width: 90vw;
+		max-height: 80vh;
+		object-fit: contain;
+		border-radius: var(--radius-lg);
+		box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+	}
+	.lightbox-caption {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		margin-top: 0.75rem;
+		color: rgba(255, 255, 255, 0.85);
+		font-family: var(--font-heading);
+		font-size: 0.9rem;
+	}
+	#lightbox-counter {
+		color: rgba(255, 255, 255, 0.5);
+		font-size: 0.8rem;
+	}
+	.lightbox-close,
+	.lightbox-prev,
+	.lightbox-next {
+		position: absolute;
+		z-index: 101;
+		background: none;
+		border: none;
+		color: white;
+		cursor: pointer;
+		transition: color 0.2s ease, transform 0.2s ease;
+	}
+	.lightbox-close:hover,
+	.lightbox-prev:hover,
+	.lightbox-next:hover {
+		color: var(--sk-orange);
+	}
+	.lightbox-close {
+		top: 1rem;
+		right: 1.5rem;
+		font-size: 2.5rem;
+		line-height: 1;
+	}
+	.lightbox-prev,
+	.lightbox-next {
+		top: 50%;
+		transform: translateY(-50%);
+		font-size: 3.5rem;
+		line-height: 1;
+		padding: 0.5rem;
+	}
+	.lightbox-prev:hover,
+	.lightbox-next:hover {
+		transform: translateY(-50%) scale(1.15);
+	}
+	.lightbox-prev {
+		left: 1rem;
+	}
+	.lightbox-next {
+		right: 1rem;
+	}
+	@media (max-width: 768px) {
+		.lightbox-prev,
+		.lightbox-next {
+			font-size: 2.5rem;
+		}
+		.lightbox-close {
+			font-size: 2rem;
+		}
+	}
 </style>
+
+<script>
+	const lightbox = document.getElementById('lightbox')!;
+	const lightboxImg = document.getElementById('lightbox-img') as HTMLImageElement;
+	const lightboxModel = document.getElementById('lightbox-model')!;
+	const lightboxCounter = document.getElementById('lightbox-counter')!;
+
+	let currentGroup: string = '';
+	let currentIndex = 0;
+	let groupItems: HTMLButtonElement[] = [];
+
+	function getGroupItems(group: string): HTMLButtonElement[] {
+		return Array.from(document.querySelectorAll<HTMLButtonElement>(
+			`[data-lightbox-group="${group}"]`
+		));
+	}
+
+	function showImage(index: number) {
+		const item = groupItems[index];
+		if (!item) return;
+		currentIndex = index;
+		lightboxImg.src = item.dataset.lightboxSrc!;
+		lightboxImg.alt = item.dataset.lightboxAlt!;
+		lightboxModel.textContent = item.dataset.lightboxModel!;
+		lightboxCounter.textContent = `${index + 1} / ${groupItems.length}`;
+	}
+
+	function open(group: string, index: number) {
+		currentGroup = group;
+		groupItems = getGroupItems(group);
+		showImage(index);
+		lightbox.setAttribute('aria-hidden', 'false');
+		document.body.style.overflow = 'hidden';
+	}
+
+	function close() {
+		lightbox.setAttribute('aria-hidden', 'true');
+		document.body.style.overflow = '';
+	}
+
+	function prev() {
+		showImage((currentIndex - 1 + groupItems.length) % groupItems.length);
+	}
+
+	function next() {
+		showImage((currentIndex + 1) % groupItems.length);
+	}
+
+	// Click handlers on gallery thumbnails
+	document.querySelectorAll<HTMLButtonElement>('[data-lightbox-group]').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			open(btn.dataset.lightboxGroup!, parseInt(btn.dataset.lightboxIndex!, 10));
+		});
+	});
+
+	// Lightbox controls
+	lightbox.querySelector('.lightbox-close')!.addEventListener('click', close);
+	lightbox.querySelector('.lightbox-prev')!.addEventListener('click', prev);
+	lightbox.querySelector('.lightbox-next')!.addEventListener('click', next);
+	lightbox.querySelector('.lightbox-backdrop')!.addEventListener('click', close);
+
+	// Keyboard navigation
+	document.addEventListener('keydown', (e) => {
+		if (lightbox.getAttribute('aria-hidden') !== 'false') return;
+		if (e.key === 'Escape') close();
+		else if (e.key === 'ArrowLeft') prev();
+		else if (e.key === 'ArrowRight') next();
+	});
+</script>
