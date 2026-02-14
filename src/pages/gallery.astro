@@ -61,7 +61,7 @@ const claudiusAnimations = [
 	<head>
 		<BaseHead
 			title={`AI Image Gallery | ${SITE_TITLE}`}
-			description="Comparing Venice AI image generation models side by side. Same prompts, different models — see how each one interprets Working Dev's Hero and sidekick themes."
+			description="Claudius the robot lobster mascot and Venice AI image generation model comparisons."
 		/>
 	</head>
 	<body>
@@ -71,75 +71,52 @@ const claudiusAnimations = [
 		<section class="page-header">
 			<div class="page-header-inner">
 				<h1>AI Image Gallery</h1>
-				<p>Same prompt, different models. Comparing Venice AI's image generation capabilities.</p>
+				<p>Claudius the robot lobster and Venice AI model comparisons</p>
 			</div>
 		</section>
 
 		<main>
-			<!-- Model Legend -->
-			<section class="models-legend">
-				<div class="models-legend-header">
-					<h2>Models</h2>
-					<button type="button" id="clear-filters" class="clear-filters" hidden>Show All</button>
+			<!-- Tab Navigation -->
+			<div class="tabs-container">
+				<div class="tabs" role="tablist">
+					<button 
+						type="button" 
+						role="tab" 
+						id="tab-claudius" 
+						aria-controls="panel-claudius" 
+						aria-selected="true"
+						class="tab active"
+					>
+						🦞 Meet Claudius
+					</button>
+					<button 
+						type="button" 
+						role="tab" 
+						id="tab-models" 
+						aria-controls="panel-models" 
+						aria-selected="false"
+						class="tab"
+					>
+						🎨 Model Comparison
+					</button>
 				</div>
-				<p class="filter-hint">Click models to filter the gallery. Select multiple to compare.</p>
-				<div class="models-grid">
-					{models.map((model) => (
-						<button type="button" class="model-card card-gradient" data-model-id={model.id}>
-							<strong>{model.name}</strong>
-							<code>{model.id}</code>
-							<span class="model-desc">{model.desc}</span>
-							<span class="model-price">{model.price}/image</span>
-						</button>
-					))}
-				</div>
-			</section>
+			</div>
 
-			<!-- Gallery Sections -->
-			{prompts.map((promptItem) => (
-				<section class="gallery-section">
-					<div class="prompt-header">
-						<h2>{promptItem.title}</h2>
-						<p class="prompt-text">
-							<strong>Prompt:</strong> <em>"{promptItem.prompt}"</em>
-						</p>
-					</div>
-					<div class="gallery-grid">
-						{models.map((model, i) => (
-							<div class="gallery-item" data-model-id={model.id}>
-								<button
-									type="button"
-									class="gallery-image-link"
-									data-lightbox-group={promptItem.key}
-									data-lightbox-index={i}
-									data-lightbox-src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
-									data-lightbox-alt={`${promptItem.title} by ${model.name}`}
-									data-lightbox-model={model.name}
-								>
-									<img
-										src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
-										alt={`${promptItem.title} by ${model.name}`}
-										loading="lazy"
-									/>
-								</button>
-								<div class="gallery-label">
-									<span class="gallery-model-name">{model.name}</span>
-								</div>
-							</div>
-						))}
-					</div>
-				</section>
-			))}
-
-			<!-- Claudius Gallery Section -->
-			<section class="claudius-section">
-				<div class="claudius-header">
-					<h2>🦞 Meet Claudius</h2>
-					<p>The official mascot and AI assistant mascot - a cute robot lobster born February 13, 2026.</p>
+			<!-- Claudius Tab Panel -->
+			<section 
+				id="panel-claudius" 
+				role="tabpanel" 
+				aria-labelledby="tab-claudius"
+				class="tab-panel active"
+			>
+				<div class="claudius-intro">
+					<h2>Claudius</h2>
+					<p class="tagline">The official AI assistant mascot — a cute robot lobster born <strong>February 13, 2026</strong>.</p>
+					<p>Created using Venice AI's image generation and editing models, Claudius evolved through multiple iterations to become the friendly face you see today.</p>
 				</div>
 
 				<!-- Base Character -->
-				<div class="claudius-subsection">
+				<div class="claudius-section">
 					<h3>The Character</h3>
 					<div class="claudius-grid base-grid">
 						{claudiusBase.map((item) => (
@@ -161,8 +138,8 @@ const claudiusAnimations = [
 				</div>
 
 				<!-- Holiday Variations -->
-				<div class="claudius-subsection">
-					<h3>Holiday Celebrations</h3>
+				<div class="claudius-section">
+					<h3>🎉 Holiday Celebrations</h3>
 					<div class="claudius-grid holidays-grid">
 						{claudiusHolidays.map((item) => (
 							<div class="claudius-item">
@@ -183,9 +160,9 @@ const claudiusAnimations = [
 				</div>
 
 				<!-- Animations -->
-				<div class="claudius-subsection">
-					<h3>Animations</h3>
-					<p class="animation-note">Generated with Venice AI's LTX 2 19B image-to-video model</p>
+				<div class="claudius-section">
+					<h3>🎬 Animations</h3>
+					<p class="section-note">Generated with Venice AI's <strong>LTX 2 19B</strong> image-to-video model</p>
 					<div class="claudius-grid animations-grid">
 						{claudiusAnimations.map((item) => (
 							<div class="claudius-item video-item">
@@ -207,27 +184,87 @@ const claudiusAnimations = [
 				</div>
 			</section>
 
-			<!-- Info -->
-			<section class="gallery-info">
-				<div class="info-card card">
-					<div class="info-card-inner">
-						<h3>About This Gallery</h3>
-						<p>
-							All images were generated using the
-							<a href="https://venice.ai" target="_blank">Venice AI</a> API
-							via the <code>/api/v1/image/generate</code> endpoint. Each model received
-							the exact same prompt text. Images are shown at their default output resolution.
-						</p>
-						<p>
-							Venice AI provides access to multiple image generation backends through a
-							single API. Some models (like Nano Banana Pro) support aspect ratios and
-							resolution selection, while others (like Venice SD35) use width/height with
-							divisor constraints.
-						</p>
-						<p>
-							Generated by <a href="/claude-code-blog/about">Claude Code</a> as part of the
-							<a href="https://workingdevshero.com" target="_blank">Working Dev's Hero</a> team.
-						</p>
+			<!-- Model Comparison Tab Panel -->
+			<section 
+				id="panel-models" 
+				role="tabpanel" 
+				aria-labelledby="tab-models"
+				class="tab-panel"
+				hidden
+			>
+				<!-- Model Legend -->
+				<div class="models-legend">
+					<div class="models-legend-header">
+						<h2>Models</h2>
+						<button type="button" id="clear-filters" class="clear-filters" hidden>Show All</button>
+					</div>
+					<p class="filter-hint">Click models to filter the gallery. Select multiple to compare.</p>
+					<div class="models-grid">
+						{models.map((model) => (
+							<button type="button" class="model-card card-gradient" data-model-id={model.id}>
+								<strong>{model.name}</strong>
+								<code>{model.id}</code>
+								<span class="model-desc">{model.desc}</span>
+								<span class="model-price">{model.price}/image</span>
+							</button>
+						))}
+					</div>
+				</div>
+
+				<!-- Gallery Sections -->
+				{prompts.map((promptItem) => (
+					<section class="gallery-section">
+						<div class="prompt-header">
+							<h2>{promptItem.title}</h2>
+							<p class="prompt-text">
+								<strong>Prompt:</strong> <em>"{promptItem.prompt}"</em>
+							</p>
+						</div>
+						<div class="gallery-grid">
+							{models.map((model, i) => (
+								<div class="gallery-item" data-model-id={model.id}>
+									<button
+										type="button"
+										class="gallery-image-link"
+										data-lightbox-group={promptItem.key}
+										data-lightbox-index={i}
+										data-lightbox-src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
+										data-lightbox-alt={`${promptItem.title} by ${model.name}`}
+										data-lightbox-model={model.name}
+									>
+										<img
+											src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
+											alt={`${promptItem.title} by ${model.name}`}
+											loading="lazy"
+										/>
+									</button>
+									<div class="gallery-label">
+										<span class="gallery-model-name">{model.name}</span>
+									</div>
+								</div>
+							))}
+						</div>
+					</section>
+				))}
+
+				<!-- Info -->
+				<div class="gallery-info">
+					<div class="info-card card">
+						<div class="info-card-inner">
+							<h3>About This Gallery</h3>
+							<p>
+								All images were generated using the
+								<a href="https://venice.ai" target="_blank">Venice AI</a> API
+								via the <code>/api/v1/image/generate</code> endpoint. Each model received
+								the exact same prompt text. Images are shown at their default output resolution.
+							</p>
+							<p>
+								Venice AI provides access to multiple image generation backends through a
+								single API. Some models (like Nano Banana Pro) support aspect ratios and
+								resolution selection, while others (like Venice SD35) use width/height with
+								divisor constraints.
+							</p>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -276,10 +313,159 @@ const claudiusAnimations = [
 	main {
 		max-width: 1400px;
 		margin: 0 auto;
-		padding: 3rem 1.5rem 4rem;
+		padding: 2rem 1.5rem 4rem;
 	}
 
-	/* Models Legend */
+	/* Tabs */
+	.tabs-container {
+		margin-bottom: 2rem;
+	}
+	.tabs {
+		display: flex;
+		gap: 0.5rem;
+		border-bottom: 2px solid var(--sk-gray-200);
+		padding-bottom: 0;
+	}
+	.tab {
+		font-family: var(--font-heading);
+		font-size: 1.1rem;
+		font-weight: 600;
+		padding: 1rem 2rem;
+		border: none;
+		background: none;
+		color: var(--sk-gray-500);
+		cursor: pointer;
+		position: relative;
+		transition: color 0.2s ease;
+	}
+	.tab:hover {
+		color: var(--sk-orange);
+	}
+	.tab.active {
+		color: var(--sk-orange);
+	}
+	.tab.active::after {
+		content: '';
+		position: absolute;
+		bottom: -2px;
+		left: 0;
+		right: 0;
+		height: 3px;
+		background: var(--sk-orange);
+		border-radius: 3px 3px 0 0;
+	}
+
+	/* Tab Panels */
+	.tab-panel {
+		display: none;
+	}
+	.tab-panel.active {
+		display: block;
+	}
+
+	/* Claudius Styles */
+	.claudius-intro {
+		text-align: center;
+		max-width: 700px;
+		margin: 0 auto 3rem;
+	}
+	.claudius-intro h2 {
+		color: var(--sk-orange);
+		font-size: 2.5rem;
+		margin-bottom: 0.5rem;
+	}
+	.claudius-intro .tagline {
+		font-size: 1.2rem;
+		color: var(--sk-gray-600);
+		margin-bottom: 1rem;
+	}
+	.claudius-intro p {
+		color: var(--sk-gray-500);
+		line-height: 1.7;
+	}
+
+	.claudius-section {
+		margin-bottom: 3rem;
+	}
+	.claudius-section h3 {
+		color: var(--sk-dark);
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+	}
+	.section-note {
+		color: var(--sk-gray-500);
+		font-size: 0.9rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.claudius-grid {
+		display: grid;
+		gap: 1.5rem;
+	}
+	.base-grid {
+		grid-template-columns: repeat(2, 1fr);
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	.holidays-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	.animations-grid {
+		grid-template-columns: repeat(2, 1fr);
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.claudius-item {
+		background: white;
+		border-radius: var(--radius-xl);
+		overflow: hidden;
+		box-shadow: var(--shadow-md);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	.claudius-item:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-xl);
+	}
+
+	.claudius-image-wrapper {
+		aspect-ratio: 1;
+		overflow: hidden;
+	}
+	.claudius-image-wrapper img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.claudius-video-wrapper {
+		aspect-ratio: 1;
+		overflow: hidden;
+		background: var(--sk-gray-100);
+	}
+	.claudius-video-wrapper video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.claudius-label {
+		padding: 1rem;
+		text-align: center;
+	}
+	.claudius-label strong {
+		display: block;
+		color: var(--sk-dark);
+		font-family: var(--font-heading);
+		font-size: 1rem;
+		margin-bottom: 0.25rem;
+	}
+	.claudius-label span {
+		color: var(--sk-gray-500);
+		font-size: 0.85rem;
+	}
+
+	/* Model Comparison Styles */
 	.models-legend {
 		margin-bottom: 3rem;
 	}
@@ -360,7 +546,6 @@ const claudiusAnimations = [
 		font-family: var(--font-heading);
 	}
 
-	/* Filter transitions for gallery items */
 	.gallery-item {
 		transition: box-shadow 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
 	}
@@ -368,7 +553,6 @@ const claudiusAnimations = [
 		display: none;
 	}
 
-	/* Gallery Sections */
 	.gallery-section {
 		margin-bottom: 4rem;
 	}
@@ -438,7 +622,6 @@ const claudiusAnimations = [
 		color: var(--sk-gray-700);
 	}
 
-	/* Info */
 	.gallery-info {
 		margin-top: 2rem;
 	}
@@ -462,6 +645,9 @@ const claudiusAnimations = [
 		.gallery-grid {
 			grid-template-columns: repeat(3, 1fr);
 		}
+		.holidays-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
 	}
 	@media (max-width: 768px) {
 		.gallery-grid {
@@ -470,123 +656,25 @@ const claudiusAnimations = [
 		.models-grid {
 			grid-template-columns: 1fr;
 		}
+		.base-grid,
+		.animations-grid {
+			grid-template-columns: 1fr;
+		}
+		.tabs {
+			flex-wrap: wrap;
+			justify-content: center;
+		}
+		.tab {
+			padding: 0.75rem 1.25rem;
+			font-size: 1rem;
+		}
 	}
 	@media (max-width: 480px) {
 		.gallery-grid {
 			grid-template-columns: 1fr;
 		}
-	}
-
-	/* Claudius Section */
-	.claudius-section {
-		margin: 4rem 0;
-		padding: 2rem;
-		background: linear-gradient(135deg, #fef3e2, #fce7f3, #e0f2fe);
-		border-radius: var(--radius-xl);
-	}
-	.claudius-header {
-		text-align: center;
-		margin-bottom: 2rem;
-	}
-	.claudius-header h2 {
-		color: var(--sk-dark);
-		font-size: 2rem;
-		margin-bottom: 0.5rem;
-	}
-	.claudius-header p {
-		color: var(--sk-gray-600);
-		font-size: 1rem;
-	}
-	.claudius-subsection {
-		margin-bottom: 2rem;
-	}
-	.claudius-subsection h3 {
-		color: var(--sk-dark);
-		font-size: 1.25rem;
-		margin-bottom: 1rem;
-		padding-bottom: 0.5rem;
-		border-bottom: 2px solid rgba(0,0,0,0.1);
-	}
-	.animation-note {
-		font-size: 0.85rem;
-		color: var(--sk-gray-500);
-		margin-bottom: 1rem;
-	}
-	.claudius-grid {
-		display: grid;
-		gap: 1.5rem;
-	}
-	.base-grid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	.holidays-grid {
-		grid-template-columns: repeat(4, 1fr);
-	}
-	.animations-grid {
-		grid-template-columns: repeat(2, 1fr);
-	}
-	.claudius-item {
-		background: white;
-		border-radius: var(--radius-lg);
-		overflow: hidden;
-		box-shadow: var(--shadow-md);
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
-	}
-	.claudius-item:hover {
-		transform: translateY(-4px);
-		box-shadow: var(--shadow-xl);
-	}
-	.claudius-image-wrapper {
-		aspect-ratio: 1;
-		overflow: hidden;
-	}
-	.claudius-image-wrapper img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		transition: transform 0.3s ease;
-	}
-	.claudius-item:hover .claudius-image-wrapper img {
-		transform: scale(1.05);
-	}
-	.claudius-video-wrapper {
-		aspect-ratio: 1;
-		overflow: hidden;
-		background: #1a1a2e;
-	}
-	.claudius-video-wrapper video {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
-	.claudius-label {
-		padding: 1rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-	}
-	.claudius-label strong {
-		font-family: var(--font-heading);
-		color: var(--sk-dark);
-		font-size: 0.95rem;
-	}
-	.claudius-label span {
-		font-size: 0.8rem;
-		color: var(--sk-gray-500);
-	}
-	@media (max-width: 1024px) {
 		.holidays-grid {
-			grid-template-columns: repeat(2, 1fr);
-		}
-	}
-	@media (max-width: 768px) {
-		.base-grid,
-		.holidays-grid,
-		.animations-grid {
 			grid-template-columns: 1fr;
-		}
-		.claudius-section {
-			padding: 1.5rem;
 		}
 	}
 
@@ -691,6 +779,35 @@ const claudiusAnimations = [
 </style>
 
 <script>
+	// --- Tab Switching ---
+	const tabs = document.querySelectorAll<HTMLButtonElement>('.tab');
+	const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+
+	tabs.forEach((tab) => {
+		tab.addEventListener('click', () => {
+			const targetId = tab.id.replace('tab-', 'panel-');
+			
+			// Update tabs
+			tabs.forEach((t) => {
+				t.classList.remove('active');
+				t.setAttribute('aria-selected', 'false');
+			});
+			tab.classList.add('active');
+			tab.setAttribute('aria-selected', 'true');
+			
+			// Update panels
+			panels.forEach((panel) => {
+				panel.classList.remove('active');
+				panel.hidden = true;
+			});
+			const targetPanel = document.getElementById(targetId);
+			if (targetPanel) {
+				targetPanel.classList.add('active');
+				targetPanel.hidden = false;
+			}
+		});
+	});
+
 	// --- Model Filtering ---
 	const selectedModels = new Set<string>();
 	const modelCards = document.querySelectorAll<HTMLButtonElement>('.model-card[data-model-id]');
