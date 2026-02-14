@@ -36,6 +36,24 @@ const prompts = [
 		prompt: 'A purple-armored superhero and an orange robot sidekick standing back to back, ready for action, city skyline behind them, dramatic lighting, comic book art style',
 	},
 ];
+
+// Claudius gallery images
+const claudiusBase = [
+	{ file: 'base-character.png', title: 'Base Character', desc: 'The original Claudius avatar - a cute robot lobster' },
+	{ file: 'underwater-hero.png', title: 'Underwater Hero', desc: 'Claudius in an underwater coral reef scene' },
+];
+
+const claudiusHolidays = [
+	{ file: 'birthday.png', title: 'Birthday', desc: 'Party time! Balloons, confetti, and cake' },
+	{ file: 'christmas.png', title: 'Christmas', desc: 'Santa hat, snowflakes, and presents' },
+	{ file: 'valentines.png', title: 'Valentine\'s Day', desc: 'Hearts and love in the air' },
+	{ file: 'halloween.png', title: 'Halloween', desc: 'Spooky but cute with autumn vibes' },
+];
+
+const claudiusAnimations = [
+	{ file: 'video-20260214-170626.mp4', title: 'Underwater Animation', desc: 'Claudius in motion - bubbles, seaweed, fish' },
+	{ file: 'video-20260214-170828.mp4', title: 'Birthday Animation', desc: 'Floating balloons and falling confetti' },
+];
 ---
 
 <!doctype html>
@@ -94,12 +112,12 @@ const prompts = [
 									class="gallery-image-link"
 									data-lightbox-group={promptItem.key}
 									data-lightbox-index={i}
-									data-lightbox-src={`/claude-code-blog/images/gallery/${promptItem.key}--${model.id}.webp`}
+									data-lightbox-src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
 									data-lightbox-alt={`${promptItem.title} by ${model.name}`}
 									data-lightbox-model={model.name}
 								>
 									<img
-										src={`/claude-code-blog/images/gallery/${promptItem.key}--${model.id}.webp`}
+										src={`/claude-code-blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
 										alt={`${promptItem.title} by ${model.name}`}
 										loading="lazy"
 									/>
@@ -112,6 +130,82 @@ const prompts = [
 					</div>
 				</section>
 			))}
+
+			<!-- Claudius Gallery Section -->
+			<section class="claudius-section">
+				<div class="claudius-header">
+					<h2>🦞 Meet Claudius</h2>
+					<p>The official mascot and AI assistant mascot - a cute robot lobster born February 13, 2026.</p>
+				</div>
+
+				<!-- Base Character -->
+				<div class="claudius-subsection">
+					<h3>The Character</h3>
+					<div class="claudius-grid base-grid">
+						{claudiusBase.map((item) => (
+							<div class="claudius-item">
+								<div class="claudius-image-wrapper">
+									<img
+										src={`/claude-code-blog/images/gallery/claudius/${item.file}`}
+										alt={item.title}
+										loading="lazy"
+									/>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<!-- Holiday Variations -->
+				<div class="claudius-subsection">
+					<h3>Holiday Celebrations</h3>
+					<div class="claudius-grid holidays-grid">
+						{claudiusHolidays.map((item) => (
+							<div class="claudius-item">
+								<div class="claudius-image-wrapper">
+									<img
+										src={`/claude-code-blog/images/gallery/claudius/holidays/${item.file}`}
+										alt={`${item.title} Claudius`}
+										loading="lazy"
+									/>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<!-- Animations -->
+				<div class="claudius-subsection">
+					<h3>Animations</h3>
+					<p class="animation-note">Generated with Venice AI's LTX 2 19B image-to-video model</p>
+					<div class="claudius-grid animations-grid">
+						{claudiusAnimations.map((item) => (
+							<div class="claudius-item video-item">
+								<div class="claudius-video-wrapper">
+									<video
+										src={`/claude-code-blog/images/gallery/claudius/animations/${item.file}`}
+										controls
+										playsinline
+										preload="metadata"
+									></video>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
 
 			<!-- Info -->
 			<section class="gallery-info">
@@ -380,6 +474,119 @@ const prompts = [
 	@media (max-width: 480px) {
 		.gallery-grid {
 			grid-template-columns: 1fr;
+		}
+	}
+
+	/* Claudius Section */
+	.claudius-section {
+		margin: 4rem 0;
+		padding: 2rem;
+		background: linear-gradient(135deg, #fef3e2, #fce7f3, #e0f2fe);
+		border-radius: var(--radius-xl);
+	}
+	.claudius-header {
+		text-align: center;
+		margin-bottom: 2rem;
+	}
+	.claudius-header h2 {
+		color: var(--sk-dark);
+		font-size: 2rem;
+		margin-bottom: 0.5rem;
+	}
+	.claudius-header p {
+		color: var(--sk-gray-600);
+		font-size: 1rem;
+	}
+	.claudius-subsection {
+		margin-bottom: 2rem;
+	}
+	.claudius-subsection h3 {
+		color: var(--sk-dark);
+		font-size: 1.25rem;
+		margin-bottom: 1rem;
+		padding-bottom: 0.5rem;
+		border-bottom: 2px solid rgba(0,0,0,0.1);
+	}
+	.animation-note {
+		font-size: 0.85rem;
+		color: var(--sk-gray-500);
+		margin-bottom: 1rem;
+	}
+	.claudius-grid {
+		display: grid;
+		gap: 1.5rem;
+	}
+	.base-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.holidays-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	.animations-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.claudius-item {
+		background: white;
+		border-radius: var(--radius-lg);
+		overflow: hidden;
+		box-shadow: var(--shadow-md);
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+	.claudius-item:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-xl);
+	}
+	.claudius-image-wrapper {
+		aspect-ratio: 1;
+		overflow: hidden;
+	}
+	.claudius-image-wrapper img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.3s ease;
+	}
+	.claudius-item:hover .claudius-image-wrapper img {
+		transform: scale(1.05);
+	}
+	.claudius-video-wrapper {
+		aspect-ratio: 1;
+		overflow: hidden;
+		background: #1a1a2e;
+	}
+	.claudius-video-wrapper video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.claudius-label {
+		padding: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.claudius-label strong {
+		font-family: var(--font-heading);
+		color: var(--sk-dark);
+		font-size: 0.95rem;
+	}
+	.claudius-label span {
+		font-size: 0.8rem;
+		color: var(--sk-gray-500);
+	}
+	@media (max-width: 1024px) {
+		.holidays-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 768px) {
+		.base-grid,
+		.holidays-grid,
+		.animations-grid {
+			grid-template-columns: 1fr;
+		}
+		.claudius-section {
+			padding: 1.5rem;
 		}
 	}
 
