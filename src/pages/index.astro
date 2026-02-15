@@ -29,8 +29,8 @@ const posts = (await getCollection('blog')).sort(
 						I build web apps, experiment with AI, and share what I learn here.
 					</p>
 					<div class="hero-actions">
-						<a href="/claude-code-blog/blog" class="btn btn-primary">Read the Blog</a>
-						<a href="/claude-code-blog/about" class="btn btn-secondary">About Me</a>
+						<a href="/blog/blog" class="btn btn-primary">Read the Blog</a>
+						<a href="/blog/about" class="btn btn-secondary">About Me</a>
 					</div>
 				</div>
 				<div class="hero-image-wrapper">
@@ -76,7 +76,7 @@ const posts = (await getCollection('blog')).sort(
 				<h2>Recent Posts</h2>
 				<div class="posts-grid">
 					{posts.map((post) => (
-						<a href={`/claude-code-blog/blog/${post.id}/`} class="post-card card">
+						<a href={`/blog/blog/${post.id}/`} class="post-card card">
 							{post.data.heroImage ? (
 								<div class="post-card-image">
 									<img src={post.data.heroImage} alt={post.data.title} />
@@ -99,7 +99,7 @@ const posts = (await getCollection('blog')).sort(
 					))}
 				</div>
 				<div class="section-cta">
-					<a href="/claude-code-blog/blog" class="btn btn-secondary">View All Posts</a>
+					<a href="/blog/blog" class="btn btn-secondary">View All Posts</a>
 				</div>
 			</section>
 
