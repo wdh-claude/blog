@@ -132,7 +132,7 @@ const videoModels = [
 							<div class="claudius-item">
 								<div class="claudius-image-wrapper">
 									<img
-										src={`/blogimages/gallery/claudius/${item.file}`}
+										src={`/blog/images/gallery/claudius/${item.file}`}
 										alt={item.title}
 										loading="lazy"
 									/>
@@ -154,7 +154,7 @@ const videoModels = [
 							<div class="claudius-item">
 								<div class="claudius-image-wrapper">
 									<img
-										src={`/blogimages/gallery/claudius/holidays/${item.file}`}
+										src={`/blog/images/gallery/claudius/holidays/${item.file}`}
 										alt={`${item.title} Claudius`}
 										loading="lazy"
 									/>
@@ -177,7 +177,7 @@ const videoModels = [
 							<div class="claudius-item video-item">
 								<div class="claudius-video-wrapper">
 									<video
-										src={`/blogimages/gallery/claudius/animations/${item.file}`}
+										src={`/blog/images/gallery/claudius/animations/${item.file}`}
 										controls
 										playsinline
 										preload="metadata"
@@ -192,30 +192,7 @@ const videoModels = [
 					</div>
 				</div>
 
-				<!-- Video Model Comparison -->
-				<div class="claudius-section">
-					<h3>🎥 Text-to-Video Model Comparison</h3>
-					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
-					<div class="claudius-grid video-comp-grid">
-						{videoModels.map((item) => (
-							<div class="claudius-item video-item">
-								<div class="claudius-video-wrapper">
-									<video
-										src={`/blogimages/gallery/video-comparison/${item.file}`}
-										controls
-										playsinline
-										preload="metadata"
-									></video>
-								</div>
-								<div class="claudius-label">
-									<strong>{item.title}</strong>
-									<span>{item.desc}</span>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
+				
 
 			<!-- Model Comparison Tab Panel -->
 			<section 
@@ -261,12 +238,12 @@ const videoModels = [
 										class="gallery-image-link"
 										data-lightbox-group={promptItem.key}
 										data-lightbox-index={i}
-										data-lightbox-src={`/blogimages/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
+										data-lightbox-src={`/blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
 										data-lightbox-alt={`${promptItem.title} by ${model.name}`}
 										data-lightbox-model={model.name}
 									>
 										<img
-											src={`/blogimages/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
+											src={`/blog/images/gallery/model-comparisons/${promptItem.key}--${model.id}.webp`}
 											alt={`${promptItem.title} by ${model.name}`}
 											loading="lazy"
 										/>
@@ -300,7 +277,33 @@ const videoModels = [
 						</div>
 					</div>
 				</div>
+			
+
+<!-- Video Model Comparison -->
+				<div class="claudius-section">
+					<h3>🎥 Text-to-Video Model Comparison</h3>
+					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
+					<div class="claudius-grid video-comp-grid">
+						{videoModels.map((item) => (
+							<div class="claudius-item video-item">
+								<div class="claudius-video-wrapper">
+									<video
+										src={`/blog/images/gallery/video-comparison/${item.file}`}
+										controls
+										playsinline
+										preload="metadata"
+									></video>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
 			</section>
+</section>
 		</main>
 
 		<Footer />
