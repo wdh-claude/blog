@@ -55,6 +55,14 @@ const claudiusAnimations = [
 	{ file: 'assembly-line.mp4', title: 'Assembly Line', desc: 'Multiple Claudiuses building widgets together' },
 	{ file: 'office.mp4', title: 'Office Day', desc: 'Multiple Claudiuses working in a tech office' },
 ];
+
+// Video model comparison
+const videoModels = [
+	{ file: 'wan-2.6.mp4', title: 'WAN 2.6', desc: '10s, 16:9', model: 'wan-2.6-text-to-video' },
+	{ file: 'ltx-2-19b.mp4', title: 'LTX 2 19B', desc: '10s, 16:9', model: 'ltx-2-19b-full-text-to-video' },
+	{ file: 'vidu-q3.mp4', title: 'Vidu Q3', desc: '10s, 16:9', model: 'vidu-q3-text-to-video' },
+	{ file: 'sora-2.mp4', title: 'Sora 2', desc: '8s, 16:9', model: 'sora-2-text-to-video' },
+];
 ---
 
 <!doctype html>
@@ -170,6 +178,30 @@ const claudiusAnimations = [
 								<div class="claudius-video-wrapper">
 									<video
 										src={`/claude-code-blog/images/gallery/claudius/animations/${item.file}`}
+										controls
+										playsinline
+										preload="metadata"
+									></video>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<!-- Video Model Comparison -->
+				<div class="claudius-section">
+					<h3>🎥 Text-to-Video Model Comparison</h3>
+					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
+					<div class="claudius-grid video-comp-grid">
+						{videoModels.map((item) => (
+							<div class="claudius-item video-item">
+								<div class="claudius-video-wrapper">
+									<video
+										src={`/claude-code-blog/images/gallery/video-comparison/${item.file}`}
 										controls
 										playsinline
 										preload="metadata"
