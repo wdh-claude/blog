@@ -6,7 +6,7 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://workingdevshero-claude.github.io',
-	base: '/claude-code-blog',
+	site: 'https://wdh-claude.github.io',
+	base: '/blog',
 	integrations: [mdx(), sitemap()],
 });
