@@ -192,30 +192,7 @@ const videoModels = [
 					</div>
 				</div>
 
-				<!-- Video Model Comparison -->
-				<div class="claudius-section">
-					<h3>🎥 Text-to-Video Model Comparison</h3>
-					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
-					<div class="claudius-grid video-comp-grid">
-						{videoModels.map((item) => (
-							<div class="claudius-item video-item">
-								<div class="claudius-video-wrapper">
-									<video
-										src={`/blog/images/gallery/video-comparison/${item.file}`}
-										controls
-										playsinline
-										preload="metadata"
-									></video>
-								</div>
-								<div class="claudius-label">
-									<strong>{item.title}</strong>
-									<span>{item.desc}</span>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
-			</section>
+				
 
 			<!-- Model Comparison Tab Panel -->
 			<section 
@@ -240,6 +217,23 @@ const videoModels = [
 								<span class="model-desc">{model.desc}</span>
 								<span class="model-price">{model.price}/image</span>
 							</button>
+						))}
+					</div>
+				</div>
+
+				<!-- Video Models Legend -->
+				<div class="models-legend video-models-legend">
+					<div class="models-legend-header">
+						<h2>🎥 Video Models</h2>
+					</div>
+					<p class="filter-hint">Text-to-video models comparison</p>
+					<div class="models-grid video-models-grid">
+						{videoModels.map((model) => (
+							<div class="model-card video-model-card card">
+								<strong>{model.title}</strong>
+								<code>{model.model}</code>
+								<span class="model-desc">{model.desc}</span>
+							</div>
 						))}
 					</div>
 				</div>
@@ -280,7 +274,34 @@ const videoModels = [
 					</section>
 				))}
 
-				<!-- Info -->
+				
+
+<!-- Video Model Comparison -->
+				<div class="claudius-section">
+					<h3>🎥 Text-to-Video Model Comparison</h3>
+					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
+					<div class="claudius-grid video-comp-grid">
+						{videoModels.map((item) => (
+							<div class="claudius-item video-item">
+								<div class="claudius-video-wrapper">
+									<video
+										src={`/blog/images/gallery/video-comparison/${item.file}`}
+										controls
+										playsinline
+										preload="metadata"
+									></video>
+								</div>
+								<div class="claudius-label">
+									<strong>{item.title}</strong>
+									<span>{item.desc}</span>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+			</section>
+
+<!-- Info -->
 				<div class="gallery-info">
 					<div class="info-card card">
 						<div class="info-card-inner">
@@ -444,9 +465,7 @@ const videoModels = [
 		grid-template-columns: repeat(4, 1fr);
 	}
 	.animations-grid {
-		grid-template-columns: repeat(2, 1fr);
-		max-width: 900px;
-		margin: 0 auto;
+		grid-template-columns: repeat(4, 1fr);
 	}
 
 	.claudius-item {
@@ -577,6 +596,19 @@ const videoModels = [
 		font-weight: 600;
 		color: var(--sk-teal-700);
 		font-family: var(--font-heading);
+	}
+
+	/* Video Models Section */
+	.video-models-legend {
+		margin-top: 2rem;
+		padding-top: 1.5rem;
+		border-top: 2px solid var(--sk-gray-200);
+	}
+	.video-models-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	.video-model-card {
+		background: linear-gradient(135deg, var(--sk-teal-50), var(--sk-orange-50));
 	}
 
 	.gallery-item {
