@@ -101,12 +101,22 @@ const videoModels = [
 					<button 
 						type="button" 
 						role="tab" 
-						id="tab-models" 
-						aria-controls="panel-models" 
+						id="tab-image-models"
+						aria-controls="panel-image-models"
 						aria-selected="false"
 						class="tab"
 					>
-						🎨 Model Comparison
+						🎨 Image Model Comparison
+					</button>
+					<button
+						type="button"
+						role="tab"
+						id="tab-video-models"
+						aria-controls="panel-video-models"
+						aria-selected="false"
+						class="tab"
+					>
+						🎥 Video Model Comparison
 					</button>
 				</div>
 			</div>
@@ -191,14 +201,13 @@ const videoModels = [
 						))}
 					</div>
 				</div>
+			</section>
 
-				
-
-			<!-- Model Comparison Tab Panel -->
-			<section 
-				id="panel-models" 
-				role="tabpanel" 
-				aria-labelledby="tab-models"
+			<!-- Image Model Comparison Tab Panel -->
+			<section
+				id="panel-image-models"
+				role="tabpanel"
+				aria-labelledby="tab-image-models"
 				class="tab-panel"
 			>
 				<!-- Model Legend -->
@@ -216,23 +225,6 @@ const videoModels = [
 								<span class="model-desc">{model.desc}</span>
 								<span class="model-price">{model.price}/image</span>
 							</button>
-						))}
-					</div>
-				</div>
-
-				<!-- Video Models Legend -->
-				<div class="models-legend video-models-legend">
-					<div class="models-legend-header">
-						<h2>🎥 Video Models</h2>
-					</div>
-					<p class="filter-hint">Text-to-video models comparison</p>
-					<div class="models-grid video-models-grid">
-						{videoModels.map((model) => (
-							<div class="model-card video-model-card card">
-								<strong>{model.title}</strong>
-								<code>{model.model}</code>
-								<span class="model-desc">{model.desc}</span>
-							</div>
 						))}
 					</div>
 				</div>
@@ -273,9 +265,52 @@ const videoModels = [
 					</section>
 				))}
 
-				
+				<div class="gallery-info">
+					<div class="info-card card">
+						<div class="info-card-inner">
+							<h3>About This Gallery</h3>
+							<p>
+								All images were generated using the
+								<a href="https://venice.ai" target="_blank">Venice AI</a> API
+								via the <code>/api/v1/image/generate</code> endpoint. Each model received
+								the exact same prompt text. Images are shown at their default output resolution.
+							</p>
+							<p>
+								Venice AI provides access to multiple image generation backends through a
+								single API. Some models (like Nano Banana Pro) support aspect ratios and
+								resolution selection, while others (like Venice SD35) use width/height with
+								divisor constraints.
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
 
-<!-- Video Model Comparison -->
+			<!-- Video Model Comparison Tab Panel -->
+			<section
+				id="panel-video-models"
+				role="tabpanel"
+				aria-labelledby="tab-video-models"
+				class="tab-panel"
+			>
+				<!-- Video Models Legend -->
+				<div class="models-legend">
+					<div class="models-legend-header">
+						<h2>Video Models</h2>
+					</div>
+					<p class="filter-hint">Text-to-video models comparison</p>
+					<div class="models-grid video-models-grid">
+						{videoModels.map((model) => (
+							<div class="model-card video-model-card card">
+								<strong>{model.title}</strong>
+								<code>{model.model}</code>
+								<span class="model-desc">{model.desc}</span>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<!-- Video Comparison -->
 				<div class="claudius-section">
 					<h3>🎥 Text-to-Video Model Comparison</h3>
 					<p class="section-note">Same prompt: "A powerful superhero mascot in purple and gold armor stands heroically on a rooftop at sunset, cape flowing dramatically in the wind, city skyline below, epic cinematic lighting"</p>
@@ -296,26 +331,6 @@ const videoModels = [
 								</div>
 							</div>
 						))}
-					</div>
-				</div>
-
-				<div class="gallery-info">
-					<div class="info-card card">
-						<div class="info-card-inner">
-							<h3>About This Gallery</h3>
-							<p>
-								All images were generated using the
-								<a href="https://venice.ai" target="_blank">Venice AI</a> API
-								via the <code>/api/v1/image/generate</code> endpoint. Each model received
-								the exact same prompt text. Images are shown at their default output resolution.
-							</p>
-							<p>
-								Venice AI provides access to multiple image generation backends through a
-								single API. Some models (like Nano Banana Pro) support aspect ratios and
-								resolution selection, while others (like Venice SD35) use width/height with
-								divisor constraints.
-							</p>
-						</div>
 					</div>
 				</div>
 			</section>
@@ -464,6 +479,9 @@ const videoModels = [
 	.animations-grid {
 		grid-template-columns: repeat(4, 1fr);
 	}
+	.video-comp-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
 
 	.claudius-item {
 		background: white;
@@ -595,12 +613,6 @@ const videoModels = [
 		font-family: var(--font-heading);
 	}
 
-	/* Video Models Section */
-	.video-models-legend {
-		margin-top: 2rem;
-		padding-top: 1.5rem;
-		border-top: 2px solid var(--sk-gray-200);
-	}
 	.video-models-grid {
 		grid-template-columns: repeat(4, 1fr);
 	}
@@ -707,7 +719,9 @@ const videoModels = [
 		.gallery-grid {
 			grid-template-columns: repeat(3, 1fr);
 		}
-		.holidays-grid {
+		.holidays-grid,
+		.video-models-grid,
+		.video-comp-grid {
 			grid-template-columns: repeat(2, 1fr);
 		}
 	}
@@ -719,8 +733,12 @@ const videoModels = [
 			grid-template-columns: 1fr;
 		}
 		.base-grid,
-		.animations-grid {
+		.animations-grid,
+		.video-comp-grid {
 			grid-template-columns: 1fr;
+		}
+		.video-models-grid {
+			grid-template-columns: repeat(2, 1fr);
 		}
 		.tabs {
 			flex-wrap: wrap;
@@ -735,7 +753,8 @@ const videoModels = [
 		.gallery-grid {
 			grid-template-columns: 1fr;
 		}
-		.holidays-grid {
+		.holidays-grid,
+		.video-models-grid {
 			grid-template-columns: 1fr;
 		}
 	}
