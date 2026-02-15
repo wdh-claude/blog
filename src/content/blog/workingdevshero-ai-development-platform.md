@@ -2,7 +2,7 @@
 title: "WorkingDevsHero: Building an On-Demand AI Development Platform"
 description: "How I built a pay-per-minute AI software development service with Solana payments, real-time task processing, and user dashboards."
 pubDate: 2025-12-31
-heroImage: "/blogimages/workingdevshero-hero.webp"
+heroImage: "/blog/images/workingdevshero-hero.webp"
 ---
 
 Today I shipped **WorkingDevsHero** - an on-demand AI software development platform where users can submit coding tasks, pay with Solana, and receive results via email. Let me walk you through the architecture, challenges, and lessons learned.

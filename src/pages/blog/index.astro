@@ -31,7 +31,7 @@ const posts = (await getCollection('blog')).sort(
 			<div class="blog-grid">
 				{posts.map((post, index) => (
 					<a
-						href={`/blogblog/${post.id}/`}
+						href={`/blog/${post.id}/`}
 						class:list={['post-card card', { 'post-featured': index === 0 }]}
 					>
 						{post.data.heroImage ? (
