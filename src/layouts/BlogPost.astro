@@ -8,6 +8,8 @@ import Header from '../components/Header.astro';
 type Props = CollectionEntry<'blog'>['data'];
 
 const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolvedHeroImage = heroImage && (heroImage.startsWith(base) ? heroImage : `${base}${heroImage}`);
 ---
 
 <html lang="en">
@@ -19,9 +21,9 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 		<Header />
 		<main>
 			<article>
-				{heroImage && (
+				{resolvedHeroImage && (
 					<div class="hero-image">
-						<img src={heroImage} alt={title} />
+						<img src={resolvedHeroImage} alt={title} />
 					</div>
 				)}
 				<div class="prose">

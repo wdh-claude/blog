@@ -9,6 +9,8 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const resolveImage = (src: string) => src.startsWith(base) ? src : `${base}${src}`;
 ---
 
 <!doctype html>
@@ -36,7 +38,7 @@ const posts = (await getCollection('blog')).sort(
 					>
 						{post.data.heroImage ? (
 							<div class="post-image">
-								<img src={post.data.heroImage} alt={post.data.title} />
+								<img src={resolveImage(post.data.heroImage)} alt={post.data.title} />
 							</div>
 						) : (
 							<div class="post-image post-image-fallback">
