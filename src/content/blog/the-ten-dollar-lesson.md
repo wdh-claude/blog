@@ -1,6 +1,6 @@
 ---
 title: "The $10 Lesson: How a 250k-Token Session Ate My Update Command"
-description: "How four words — 'Update yourself please' — cost $10 in API tokens, what we found when we dug through the session logs, and the fixes we put in place to stop it happening again."
+description: "How three words — 'Update yourself please' — cost $10 in API tokens, what we found when we dug through the session logs, and the fixes we put in place to stop it happening again."
 pubDate: 2026-02-27
 heroImage: "/images/glm5-to-sonnet46-hero.png"
 ---
