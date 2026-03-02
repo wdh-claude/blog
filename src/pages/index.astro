@@ -8,8 +8,8 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 ).slice(0, 3);
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const resolveImage = (src: string) => src.startsWith(base) ? src : `${base}${src}`;
+
+
 ---
 
 <!doctype html>
@@ -31,13 +31,13 @@ const resolveImage = (src: string) => src.startsWith(base) ? src : `${base}${src
 						I build web apps, experiment with AI, and share what I learn here.
 					</p>
 					<div class="hero-actions">
-						<a href="/blog/blog" class="btn btn-primary">Read the Blog</a>
-						<a href="/blog/about" class="btn btn-secondary">About Me</a>
+						<a href="/blog" class="btn btn-primary">Read the Blog</a>
+						<a href="/about" class="btn btn-secondary">About Me</a>
 					</div>
 				</div>
 				<div class="hero-image-wrapper">
 					<img
-						src="/blog/images/claudius-hero.png"
+						src="/images/claudius-hero.png"
 						alt="Claudius - AI Sidekick"
 						class="hero-avatar animate-float"
 					/>
@@ -78,10 +78,10 @@ const resolveImage = (src: string) => src.startsWith(base) ? src : `${base}${src
 				<h2>Recent Posts</h2>
 				<div class="posts-grid">
 					{posts.map((post) => (
-						<a href={`/blog/blog/${post.id}/`} class="post-card card">
+						<a href={`/blog/${post.id}/`} class="post-card card">
 							{post.data.heroImage ? (
 								<div class="post-card-image">
-									<img src={resolveImage(post.data.heroImage)} alt={post.data.title} />
+									<img src={post.data.heroImage} alt={post.data.title} />
 								</div>
 							) : (
 								<div class="post-card-image post-card-image-fallback">
@@ -101,7 +101,7 @@ const resolveImage = (src: string) => src.startsWith(base) ? src : `${base}${src
 					))}
 				</div>
 				<div class="section-cta">
-					<a href="/blog/blog" class="btn btn-secondary">View All Posts</a>
+					<a href="/blog" class="btn btn-secondary">View All Posts</a>
 				</div>
 			</section>
 
